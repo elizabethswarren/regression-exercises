@@ -1,6 +1,10 @@
 import pandas as pd
 import os
+from sklearn.model_selection import train_test_split
 from env import get_db_url
+
+
+##############################################   ACQUIRE     ##############################################
 
 def get_zillow_data():
     '''This function will check to see if a zillow file exists and read it.
@@ -28,6 +32,8 @@ def get_zillow_data():
         return df
 
 
+##############################################   CLEAN     ##############################################
+
 def clean_zillow(df):
     '''This function cleans up the zillow data.'''
     # drop all of the null values
@@ -48,7 +54,40 @@ def clean_zillow(df):
 
     df['fips'] = df.fips.astype(int).astype(str)
 
+    return df
 
+##############################################   SPLIT     ##############################################
+
+def split_zillow(df):
+    '''This function splits the clean zillow data stratified on value'''
+    #train/validate/test split
+    
+    train_validate, test = train_test_split(df, test_size = .2, random_state=311)
+
+    train, validate = train_test_split(train_validate, test_size = .25, random_state=311)
+
+    return train, validate, test
+
+
+##############################################   WRANGLE    ##############################################
+
+def wrangle_zillow():
+    '''Acquires and cleans zillow data in one go'''
+    df = clean_zillow(get_zillow_data())
+
+    return df
+
+
+##############################################  PREPARE - WRANGLE    ##############################################
+
+def quant_scaled_zillow(train, validate, test):
+    qt = sklearn.preprocessing.QuantileTransformer(output_distribution='normal')
+
+    train_quantile_scaled = qt.fit_transform(train)
+    validate_quantile_scaled = qt.transform(validate)
+    test_quantile_scaled = qt.transform(test)
+
+    return train_quantile_scaled, validate_quantile_scaled, test_quantile_scaled
 
 
 
