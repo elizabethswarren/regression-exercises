@@ -48,7 +48,7 @@ def clean_zillow(df):
     # change the dtype for the necessary columns
     df['sqfeet'] = df.sqfeet.astype(int)
 
-    df['yearbuilt'] = df.yearbuilt.astype(int).astype(str)
+    df['yearbuilt'] = df.yearbuilt.astype(int)
 
     df['sqfeet'] = df.sqfeet.astype(int)
 
@@ -78,16 +78,16 @@ def wrangle_zillow():
     return df
 
 
-##############################################  PREPARE - WRANGLE    ##############################################
+##############################################  PREPARE - SCALED    ##############################################
 
-def quant_scaled_zillow(train, validate, test):
-    qt = sklearn.preprocessing.QuantileTransformer(output_distribution='normal')
+def scaled_zillow(train, validate, test):
+    scale = sklearn.preprocessing.MinMaxScaler()
 
-    train_quantile_scaled = qt.fit_transform(train)
-    validate_quantile_scaled = qt.transform(validate)
-    test_quantile_scaled = qt.transform(test)
+    train_scaled = scaler.fit_transform(train)
+    validate_scaled = scaler.transform(validate)
+    test_scaled = scaler.transform(test)
 
-    return train_quantile_scaled, validate_quantile_scaled, test_quantile_scaled
+    return train_scaled, validate_scaled, test_scaled
 
 
 
