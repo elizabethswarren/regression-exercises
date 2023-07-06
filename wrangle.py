@@ -15,7 +15,8 @@ def get_zillow_data():
     else:
         sql = '''SELECT bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet,
                 taxvaluedollarcnt, yearbuilt, taxamount, fips
-               FROM properties_2017'''
+               FROM properties_2017
+               WHERE propertylandusetypeid=261'''
         
         url = get_db_url('zillow')
 
@@ -36,10 +37,16 @@ def clean_zillow(df):
     df = df.rename(columns={'bedroomcnt':'bedcount',
                         'bathroomcnt':'bathcount',
                         'calculatedfinishedsquarefeet': 'sqfeet',
-                        'taxvaluedollarcnt': 'taxvalue',})
+                        'taxvaluedollarcnt': 'value',})
 
     # change the dtype for the necessary columns
     df['sqfeet'] = df.sqfeet.astype(int)
+
+    df['yearbuilt'] = df.yearbuilt.astype(int).astype(str)
+
+    df['sqfeet'] = df.sqfeet.astype(int)
+
+    df['fips'] = df.fips.astype(int).astype(str)
 
 
 
