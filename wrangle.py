@@ -80,13 +80,17 @@ def wrangle_zillow():
 
 ##############################################  PREPARE - SCALED    ##############################################
 
-def scaled_zillow(train, validate, test):
-    scale = sklearn.preprocessing.MinMaxScaler()
+def scaled_data(train, validate, test):
+    '''This function takes in the train, validate, and test dataframes and returns the scaled data as dataframes.'''
+    
+    scaler = sklearn.preprocessing.MinMaxScaler()
 
-    train_scaled = scaler.fit_transform(train)
-    validate_scaled = scaler.transform(validate)
-    test_scaled = scaler.transform(test)
+    scaler.fit(train)
 
+    train_scaled = pd.DataFrame(scaler.transform(train))
+    validate_scaled = pd.DataFrame(scaler.transform(validate))
+    test_scaled = pd.DataFrame(scaler.transform(test))
+    
     return train_scaled, validate_scaled, test_scaled
 
 
